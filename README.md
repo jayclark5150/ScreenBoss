@@ -34,3 +34,7 @@ xcodebuild -project ScreenBoss.xcodeproj -scheme ScreenBoss -configuration Relea
 
 The project is defined in `project.yml`; the `.xcodeproj` is generated and not
 checked in.
+
+## License
+
+[MIT](LICENSE) © Jay Clark
