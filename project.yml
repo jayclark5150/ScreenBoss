@@ -12,8 +12,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jayclark.screenboss
-        MARKETING_VERSION: 1.0.0
-        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.1.0
+        CURRENT_PROJECT_VERSION: 2
         INFOPLIST_FILE: Sources/Info.plist
         CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: 5.0

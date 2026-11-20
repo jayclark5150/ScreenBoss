@@ -61,11 +61,23 @@ final class PopoverViewController: NSViewController {
 
         addSeparator(to: stack)
 
+        let buttonRow = NSStackView()
+        buttonRow.orientation = .horizontal
+        buttonRow.alignment = .centerY
+        buttonRow.spacing = 8
+
+        let prefsBtn = NSButton(title: "Preferences…", target: self, action: #selector(openPreferences))
+        prefsBtn.bezelStyle = .rounded
+        prefsBtn.controlSize = .small
+
         let quitBtn = NSButton(title: "Quit ScreenBoss", target: NSApp,
                                action: #selector(NSApplication.terminate(_:)))
         quitBtn.bezelStyle = .rounded
         quitBtn.controlSize = .small
-        stack.addArrangedSubview(quitBtn)
+
+        buttonRow.addArrangedSubview(prefsBtn)
+        buttonRow.addArrangedSubview(quitBtn)
+        stack.addArrangedSubview(buttonRow)
 
         v.layoutSubtreeIfNeeded()
         let fit = v.fittingSize
@@ -263,6 +275,10 @@ final class PopoverViewController: NSViewController {
 
     @objc private func nightShiftToggled(_ sender: NSButton) {
         NightShiftManager.setEnabled(sender.state == .on)
+    }
+
+    @objc private func openPreferences() {
+        PreferencesWindowController.shared.show()
     }
 
     @objc private func trueToneToggled(_ sender: NSButton) {

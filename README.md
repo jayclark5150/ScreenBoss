@@ -2,6 +2,8 @@
 
 A lightweight macOS menu bar app for quick control of your displays: brightness,
 resolution, refresh rate, True Tone, and Night Shift — all from a single popover.
+It can also launch at login, adjust brightness from the keyboard, and restore your
+per-display settings automatically.
 
 ## Install
 
@@ -20,7 +22,21 @@ drag **ScreenBoss** into **Applications**.
 - **Refresh rate** switching
 - **True Tone** toggle (on supported displays)
 - **Night Shift** toggle
+- **Keyboard shortcuts** for brightness (⌃⌥↑ / ⌃⌥↓, opt-in)
+- **Per-display profiles** — save your resolution/refresh/brightness and restore them at login
+- **Launch at login** (via `SMAppService`)
+- **Preferences window** for the above settings
+- Menu bar icon **reflects the number of connected displays**
 - Runs as a menu bar accessory (no Dock icon)
+
+## Preferences
+
+Open the popover and click **Preferences…** to:
+
+- Toggle **Launch at login**
+- Enable the **brightness keyboard shortcuts** (⌃⌥↑ / ⌃⌥↓)
+- Enable **Restore display settings at login**, and **Save Current Settings as Profile**
+  to snapshot each display's current resolution, refresh rate, and brightness
 
 ## Build from source
 
