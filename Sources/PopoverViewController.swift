@@ -8,6 +8,7 @@ final class PopoverViewController: NSViewController {
     private var hzPopupMap:       [NSPopUpButton: CGDirectDisplayID] = [:]
     private var trueToneMap:      [NSButton: CGDirectDisplayID]      = [:]
     private var brightnessSliders: [CGDirectDisplayID: NSSlider]     = [:]
+    private var loginToggle: NSButton?
 
     override func loadView() {
         NSLog("ScreenBoss: loadView START")
@@ -59,6 +60,21 @@ final class PopoverViewController: NSViewController {
         stack.addArrangedSubview(nsRow)
         NSLayoutConstraint.activate([nsRow.widthAnchor.constraint(equalTo: stack.widthAnchor)])
 
+        let loginRow = NSStackView()
+        loginRow.orientation = .horizontal
+        loginRow.alignment = .centerY
+        loginRow.spacing = 6
+        let loginLabel = NSTextField(labelWithString: "Open at Login")
+        loginLabel.font = .systemFont(ofSize: 12)
+        loginLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        let loginBtn = NSButton(checkboxWithTitle: "", target: self, action: #selector(loginToggled(_:)))
+        loginToggle = loginBtn
+        loginRow.addArrangedSubview(loginLabel)
+        loginRow.addArrangedSubview(loginBtn)
+        stack.addArrangedSubview(loginRow)
+        NSLayoutConstraint.activate([loginRow.widthAnchor.constraint(equalTo: stack.widthAnchor)])
+        refreshLoginToggle()
+
         addSeparator(to: stack)
 
         let quitBtn = NSButton(title: "Quit ScreenBoss", target: NSApp,
@@ -75,6 +91,15 @@ final class PopoverViewController: NSViewController {
         for display in displays {
             fetchBrightnessAsync(displayID: display.id)
         }
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        refreshLoginToggle()  // may have changed in System Settings
+    }
+
+    private func refreshLoginToggle() {
+        loginToggle?.state = (LoginItemManager.isEnabled || LoginItemManager.needsApproval) ? .on : .off
     }
 
     // MARK: - Display card
@@ -263,6 +288,14 @@ final class PopoverViewController: NSViewController {
 
     @objc private func nightShiftToggled(_ sender: NSButton) {
         NightShiftManager.setEnabled(sender.state == .on)
+    }
+
+    @objc private func loginToggled(_ sender: NSButton) {
+        LoginItemManager.setEnabled(sender.state == .on)
+        if sender.state == .on && LoginItemManager.needsApproval {
+            LoginItemManager.openLoginItemsSettings()
+        }
+        refreshLoginToggle()
     }
 
     @objc private func trueToneToggled(_ sender: NSButton) {
