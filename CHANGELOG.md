@@ -17,8 +17,15 @@
 Download `ScreenBoss-1.1.0.dmg`, open it, and drag **ScreenBoss** into **Applications**,
 replacing the old copy. Quit the running ScreenBoss first.
 
-> The app is ad-hoc signed (no Apple Developer ID). On first launch, right-click the
-> app → **Open** to get past Gatekeeper. You only need to do this once.
+The app isn't signed with an Apple Developer ID, so macOS blocks it the first time:
+
+- **macOS 15 Sequoia and later:** open it once, click **Done**, then go to
+  **System Settings → Privacy & Security**, scroll to **Security**, and click
+  **Open Anyway** next to ScreenBoss.
+- **macOS 13–14:** right-click the app → **Open**, then click **Open**.
+
+See the [README](https://github.com/jayclark5150/ScreenBoss#allowing-screenboss-to-open)
+for details.
 
 ## 1.0.0
 

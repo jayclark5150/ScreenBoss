@@ -13,14 +13,40 @@ Requires macOS 13 Ventura or later.
    [Releases](https://github.com/jayclark5150/ScreenBoss/releases) page.
 2. Open it and drag **ScreenBoss** into **Applications**.
 3. Launch it from Applications. Its icon appears in the menu bar (there's no Dock icon).
-
-> The app is ad-hoc signed (no Apple Developer ID), so the first time you launch it
-> macOS Gatekeeper will block it. Right-click the app → **Open**, then confirm. You
-> only need to do this once.
+   The first time, macOS blocks it; see [Allowing ScreenBoss to open](#allowing-screenboss-to-open).
 
 The first time ScreenBoss runs from Applications it adds itself to your login items,
 so it starts automatically from then on. Untick **Open at Login** in the popover to
 turn that off.
+
+### Allowing ScreenBoss to open
+
+ScreenBoss isn't signed with an Apple Developer ID, so the first time you open it macOS
+blocks it with a message that it "cannot be opened" or "could not verify" it. You only
+need to allow it once.
+
+**macOS 15 Sequoia and later**
+
+1. Open ScreenBoss from Applications. When macOS blocks it, click **Done** (not
+   *Move to Trash*).
+2. Open **System Settings → Privacy & Security** and scroll down to **Security**.
+3. Next to *"ScreenBoss" was blocked to protect your Mac*, click **Open Anyway**.
+   This button only appears for about an hour after step 1, so repeat step 1 if you
+   don't see it.
+4. Enter your password or use Touch ID, then click **Open Anyway** again.
+
+**macOS 13 Ventura and 14 Sonoma**
+
+Right-click (or Control-click) ScreenBoss in Applications, choose **Open**, then click
+**Open** in the dialog.
+
+**Using Terminal instead**
+
+Removing the download quarantine flag also lets it open, on any macOS version:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/ScreenBoss.app
+```
 
 ## Features
 
