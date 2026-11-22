@@ -1,14 +1,16 @@
 name: Release
 
 # Builds ScreenBoss, packages a DMG, and publishes a GitHub release
-# whenever a version tag (v1.2.3) is pushed.
+# whenever a version tag (v1.2.3) is pushed. It can also be run by hand
+# (Actions → Release → Run workflow) on a branch: it releases that branch's
+# latest commit and creates the tag if it doesn't exist yet.
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing tag to (re)build and release, e.g. v1.1.0"
+        description: "Tag to release, e.g. v1.1.0 (created from the selected branch if it doesn't exist)"
         required: true
 
 permissions:
@@ -22,8 +24,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TAG }}
 
       - name: Check version matches tag
         run: |
@@ -72,5 +72,6 @@ jobs:
             gh release edit "$TAG" --notes-file notes.md
           else
             gh release create "$TAG" "ScreenBoss-$VERSION.dmg" \
-              --title "ScreenBoss $VERSION" --notes-file notes.md
+              --title "ScreenBoss $VERSION" --notes-file notes.md \
+              --target "$GITHUB_SHA"
           fi
