@@ -22,17 +22,22 @@ turn that off.
 ### Allowing ScreenBoss to open
 
 ScreenBoss isn't signed with an Apple Developer ID, so the first time you open it macOS
-blocks it with a message that it "cannot be opened" or "could not verify" it. You only
-need to allow it once.
+blocks it with a *"ScreenBoss" Not Opened* message. You only need to allow it once.
 
 **macOS 15 Sequoia and later**
 
 1. Open ScreenBoss from Applications. When macOS blocks it, click **Done** (not
    *Move to Trash*).
+
+   <img src="docs/images/not-opened-dialog.png" alt="&quot;ScreenBoss&quot; Not Opened dialog with Move to Trash and Done buttons" width="250">
+
 2. Open **System Settings → Privacy & Security** and scroll down to **Security**.
 3. Next to *"ScreenBoss" was blocked to protect your Mac*, click **Open Anyway**.
    This button only appears for about an hour after step 1, so repeat step 1 if you
    don't see it.
+
+   <img src="docs/images/open-anyway.png" alt="Privacy &amp; Security settings showing &quot;ScreenBoss&quot; was blocked to protect your Mac, with an Open Anyway button" width="485">
+
 4. Enter your password or use Touch ID, then click **Open Anyway** again.
 
 **macOS 13 Ventura and 14 Sonoma**
