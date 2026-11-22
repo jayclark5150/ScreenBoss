@@ -38,7 +38,15 @@ blocks it with a *"ScreenBoss" Not Opened* message. You only need to allow it on
 
    <img src="docs/images/open-anyway.png" alt="Privacy &amp; Security settings showing &quot;ScreenBoss&quot; was blocked to protect your Mac, with an Open Anyway button" width="485">
 
-4. Enter your password or use Touch ID, then click **Open Anyway** again.
+4. macOS asks you to confirm. Use Touch ID, or click **Use Password…** and enter
+   your Mac password.
+
+   <img src="docs/images/authenticate.png" alt="Touch ID prompt: You are attempting to open an app that may cause harm to your Mac, with Use Password and Cancel buttons" width="250">
+
+5. In the *Open "ScreenBoss"?* dialog, click **Open Anyway**. ScreenBoss opens and its
+   icon appears in the menu bar. From now on it opens normally.
+
+   <img src="docs/images/open-anyway-dialog.png" alt="Open &quot;ScreenBoss&quot;? dialog with Move to Trash, Open Anyway, and Done buttons" width="250">
 
 **macOS 13 Ventura and 14 Sonoma**
 
