@@ -10,18 +10,52 @@ final class StatusBarController: NSObject {
         super.init()
 
         if let button = statusItem.button {
-            let image = NSImage(systemSymbolName: "display.2", accessibilityDescription: "ScreenBoss")
-            image?.isTemplate = true
-            button.image = image
             button.action = #selector(togglePopover)
             button.target = self
         }
+        updateStatusIcon()
+
+        // Keep the menu bar icon in sync as displays are connected/disconnected.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(displaysChanged),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
 
         // Force loadView now so preferredContentSize is set before first show
         let vc = PopoverViewController()
         _ = vc.view
         popover.contentViewController = vc
         popover.behavior = .transient
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func displaysChanged() {
+        updateStatusIcon()
+    }
+
+    /// Updates the status-bar icon and badge to reflect the number of connected displays.
+    private func updateStatusIcon() {
+        guard let button = statusItem.button else { return }
+        let count = DisplayManager.activeDisplays().count
+        let symbol = count > 1 ? "display.2" : "display"
+        let description = "ScreenBoss — \(count) display\(count == 1 ? "" : "s")"
+        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: description)
+        image?.isTemplate = true
+        button.image = image
+
+        // Show the exact count alongside the icon when more than one display is present.
+        if count > 1 {
+            button.title = " \(count)"
+            button.imagePosition = .imageLeading
+        } else {
+            button.title = ""
+            button.imagePosition = .imageOnly
+        }
     }
 
     @objc private func togglePopover() {

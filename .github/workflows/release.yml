@@ -1,0 +1,76 @@
+name: Release
+
+# Builds ScreenBoss, packages a DMG, and publishes a GitHub release
+# whenever a version tag (v1.2.3) is pushed.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to (re)build and release, e.g. v1.1.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Check version matches tag
+        run: |
+          VERSION=$(awk '/MARKETING_VERSION:/ {print $2}' project.yml)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          if [ "v$VERSION" != "$TAG" ]; then
+            echo "::error::project.yml says $VERSION but the tag is $TAG"
+            exit 1
+          fi
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build
+        run: |
+          xcodegen generate
+          xcodebuild -project ScreenBoss.xcodeproj -scheme ScreenBoss \
+            -configuration Release -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Package DMG
+        run: |
+          mkdir -p dmg
+          cp -R build/Build/Products/Release/ScreenBoss.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname "ScreenBoss" -srcfolder dmg -ov -format UDZO \
+            "ScreenBoss-$VERSION.dmg"
+
+      - name: Extract release notes
+        run: |
+          awk -v v="$VERSION" '
+            $0 == "## " v { on = 1; next }
+            /^## / && on { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::No '## $VERSION' section in CHANGELOG.md"
+            exit 1
+          fi
+
+      - name: Publish release
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "ScreenBoss-$VERSION.dmg" --clobber
+            gh release edit "$TAG" --notes-file notes.md
+          else
+            gh release create "$TAG" "ScreenBoss-$VERSION.dmg" \
+              --title "ScreenBoss $VERSION" --notes-file notes.md
+          fi

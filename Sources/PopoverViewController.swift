@@ -77,11 +77,23 @@ final class PopoverViewController: NSViewController {
 
         addSeparator(to: stack)
 
+        let buttonRow = NSStackView()
+        buttonRow.orientation = .horizontal
+        buttonRow.alignment = .centerY
+        buttonRow.spacing = 8
+
+        let prefsBtn = NSButton(title: "Preferences…", target: self, action: #selector(openPreferences))
+        prefsBtn.bezelStyle = .rounded
+        prefsBtn.controlSize = .small
+
         let quitBtn = NSButton(title: "Quit ScreenBoss", target: NSApp,
                                action: #selector(NSApplication.terminate(_:)))
         quitBtn.bezelStyle = .rounded
         quitBtn.controlSize = .small
-        stack.addArrangedSubview(quitBtn)
+
+        buttonRow.addArrangedSubview(prefsBtn)
+        buttonRow.addArrangedSubview(quitBtn)
+        stack.addArrangedSubview(buttonRow)
 
         v.layoutSubtreeIfNeeded()
         let fit = v.fittingSize
@@ -99,7 +111,7 @@ final class PopoverViewController: NSViewController {
     }
 
     private func refreshLoginToggle() {
-        loginToggle?.state = (LoginItemManager.isEnabled || LoginItemManager.needsApproval) ? .on : .off
+        loginToggle?.state = LaunchAtLoginManager.isOnOrPending ? .on : .off
     }
 
     // MARK: - Display card
@@ -291,11 +303,12 @@ final class PopoverViewController: NSViewController {
     }
 
     @objc private func loginToggled(_ sender: NSButton) {
-        LoginItemManager.setEnabled(sender.state == .on)
-        if sender.state == .on && LoginItemManager.needsApproval {
-            LoginItemManager.openLoginItemsSettings()
-        }
+        LaunchAtLoginManager.userToggled(sender.state == .on)
         refreshLoginToggle()
+    }
+
+    @objc private func openPreferences() {
+        PreferencesWindowController.shared.show()
     }
 
     @objc private func trueToneToggled(_ sender: NSButton) {
